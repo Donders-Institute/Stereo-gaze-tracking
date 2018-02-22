@@ -1,0 +1,5 @@
+C:\Users\Annemiek\Desktop\StereoEyetracker\bin\Release\StereoEyetracker.exe.config
+C:\Users\Annemiek\Desktop\StereoEyetracker\obj\Release\StereoEyetracker.csprojResolveAssemblyReference.cache
+C:\Users\Annemiek\Desktop\StereoEyetracker\obj\Release\StereoEyetracker.Form1.resources
+C:\Users\Annemiek\Desktop\StereoEyetracker\obj\Release\StereoEyetracker.Properties.Resources.resources
+C:\Users\Annemiek\Desktop\StereoEyetracker\obj\Release\StereoEyetracker.csproj.GenerateResource.Cache

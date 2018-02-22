@@ -1,0 +1,88 @@
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.DebuggerVisualizers.VS2012.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.ML.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.OCR.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.Shape.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.Stitching.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.Superres.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.UI.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.UI.GL.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.VideoStab.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.Util.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\lumeneraapi.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.Cuda.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\ZedGraph.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.ML.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.OCR.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.Shape.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.Stitching.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.Superres.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.UI.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.UI.GL.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.VideoStab.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.Util.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Emgu.CV.Cuda.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.DebuggerVisualizers.VS2012.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.ML.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.OCR.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.Shape.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.Stitching.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.Superres.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.UI.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.UI.GL.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.VideoStab.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.Util.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\lumeneraapi.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.Cuda.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\ZedGraph.dll
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.ML.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.OCR.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.Shape.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.Stitching.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.Superres.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.UI.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.UI.GL.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.VideoStab.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.Util.xml
+C:\Users\Annemiek\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1 - Copy\WindowsFormsApplication1\bin\Debug\Emgu.CV.Cuda.xml
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams\bin\Debug\StereoEyetracker.exe.config
+C:\Users\Annemiek\Desktop\WindowsFormsApplication1 2cams - Copy (2)\bin\Debug\StereoEyetracker.exe.config
