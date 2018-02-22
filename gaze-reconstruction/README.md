@@ -1,4 +1,4 @@
-Gaze reconstruction algorithms
+# Gaze reconstruction algorithms
 
 These algorithms were developed at the Donders Institute for Brain, Cognition and Behaviour by Annemiek Barsingerhorn and Jeroen Goossens and can be used to reconstruct the gaze based on the output of the stereo tracking software (stereo-tracking-software located in this repository). An example on how to use the algorithms and load the data in matlab is provided in "StereoTracker.m". The necessary gazelogfiles and files with the stereo calibration and the geometry of the set-up are provided as well. 
 
