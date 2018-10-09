@@ -6,7 +6,7 @@ The stereo eyetracker software and the gaze reconstruction algorithms are descri
 
 Barsingerhorn, Boonstra & Goossens (2018). Development and validation of a high-speed stereoscopic eyetracker. Behavior Research Methods. DOI: 10.3758/s13428-018-1026-7
 
-At present the software only works with Lumenera cameras, but it should be fairly easy to get it to work with cameras from other suppliers as well. There is room for improving the software on other aspects as well. 
+At present the software only works with Lumenera cameras, but it should be fairly easy to get it to work with cameras from other suppliers as well. There is room for improving the software on other aspects as well. The software was developen under Windows 7, but also works on Windows 10.
 
 The logfiles are saved in the following directory: "C:\\Users\\Public\\Roaming\\StereoEyetracker". The gaze reconstruction is performed offline, examples and m-files can be found in the folder gaze-reconstruction within this repository. 
 
