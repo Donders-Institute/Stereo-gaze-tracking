@@ -4,9 +4,12 @@
 % Behav Res Meth
 
 % Annemiek Barsingerhorn
+% Jeroen Goossens (speed optim)
   
 
 %% Load calibration data
+ticstart=tic;
+
 load('StereocalibMatlab.mat');
 load('setup.mat')
 
@@ -22,202 +25,161 @@ Rpos=m;
 gazelog1='gazelog1cam2016121911577740.txt';
 gazelog2='gazelog2cam2016121911572441.txt';
 
+% Right camera
+disp('Loading data from camera 1');
+Datainfo1 = [];
 fid=fopen(gazelog2);
 tline='0';
 ind=1;
 while tline~=-1
     tline = fgets(fid);
-    tline(tline==',') = '.';
-    data{ind,1}=tline;
-    
-    ind=ind+1;
+    if tline~=-1
+        % convert the text to numbers
+        tline(tline==',') = '.';
+        Datainfo1{ind}=sscanf(tline,'%f');
+        ind=ind+1;
+    end
 end
+fclose(fid);
+% convert to array of doubles
+Datainfo1 = cell2mat(Datainfo1);
+% ticks to milliseconds, each tick lasts 100 nanoseconds
+tstamps1  = Datainfo1(1,:)*0.0001; 
 
-ind=1;
-parfor i=1:length(data)-1
-    Datainfo{i}=sscanf(data{i},'%f');
-end
-
-% Right camera
-
-% Read data gazetracker
+% Left camera
+disp('Loading data from camera 2');
+Datainfo2 = [];
 fid=fopen(gazelog1);
-
 tline='0';
 ind=1;
 while tline~=-1
     tline = fgets(fid);
-    tline(tline==',') = '.';
-    data2{ind,1}=tline;
+    if tline~=-1
+        % convert the text to numbers
+        tline(tline==',') = '.';
+        Datainfo2{ind}=sscanf(tline,'%f');
+        ind=ind+1;
+    end
+end
+fclose(fid);
+% convert to array of doubles
+Datainfo2 = cell2mat(Datainfo2);
+% ticks to milliseconds
+tstamps2  = Datainfo2(1,:)*0.0001; 
+
+%% Select a restricted data set
+
+% Takes a long time, therefore not all samples. 
+% First part eyes were not visible and therefore no valid data
+tstampstot = unique([tstamps1 tstamps2]);
+
+s1 = tstamps1 >= tstampstot(50000) & tstamps1 <= tstampstot(100000);
+s2 = tstamps2 >= tstampstot(50000) & tstamps2 <= tstampstot(100000);
+Datainfo1 = Datainfo1(:,s1);
+Datainfo2 = Datainfo2(:,s2);
+tstamps1  = tstamps1(s1);
+tstamps2  = tstamps2(s2);
+nSamples1 = length(tstamps1);
+nSamples2 = length(tstamps2);
+
+%%  Eliminate duplicate time stamps
+[tstamps1, IC]= unique(tstamps1,'first');
+Datainfo1 = Datainfo1(:,IC);
+
+[tstamps2, IC]= unique(tstamps2,'first');
+Datainfo2 = Datainfo2(:,IC);
+
+%% Extract relevant data and undistort and unscramble coordinates
+
+%JG: undistortPoints is not very fast. Therefore it is better/faster to do it here before the interpolation
+Leftglint1cam1r  = Datainfo1(6:7,:);
+Leftglint2cam1r  = Datainfo1(8:9,:); 
+Rightglint1cam1r = Datainfo1(10:11,:);
+Rightglint2cam1r = Datainfo1(12:13,:); 
+Leftpupilcam1r   = Datainfo1(14:15,:);
+Rightpupilcam1r  = Datainfo1(16:17,:);
+Leftpupsizecam1  = Datainfo1(18,:);
+Rightpupsizecam1 = Datainfo1(19,:);
+
+disp('Undistort and unscramble data from camera 1'); tic
+parfor i=1:nSamples1
     
-    ind=ind+1;
-end
-
-ind=1;
-parfor i=1:length(data2)-1
-    Datainfo2{i}=sscanf(data2{i},'%f');
-end
-
-parfor i=1:length(Datainfo)
-    vr=Datainfo{i};
-    var=vr(1);
-    sdt=System.DateTime(var);
-    Year=double(sdt.Year);
-    Month=double(sdt.Month);
-    Day=double(sdt.Day);
-    Hour=double(sdt.Hour);
-    Minute=double(sdt.Minute);
-    Second=double(sdt.Second);
-    Millisecond=double(sdt.Millisecond)/1000;
-    tstamps(i)=datenum( Year,Month,Day,Hour,Minute,Second+Millisecond)*86400000;
-end
-
-parfor i=1:length(Datainfo2)
-    vr=Datainfo2{i};
-    var=vr(1);
-    sdt=System.DateTime(var);
-    Year=double(sdt.Year);
-    Month=double(sdt.Month);
-    Day=double(sdt.Day);
-    Hour=double(sdt.Hour);
-    Minute=double(sdt.Minute);
-    Second=double(sdt.Second);
-    Millisecond=double(sdt.Millisecond)/1000;
-    tstamps2(i)=datenum( Year,Month,Day,Hour,Minute,Second+Millisecond)*86400000;
-end
+    % make sure left eye is always on left side
+    pl = Leftpupilcam1r(:,i);
+    pr = Rightpupilcam1r(:,i);
+    if pl(1) < pr(1)
+        pnts = [Leftglint1cam1r(:,i) Leftglint2cam1r(:,i) Rightglint1cam1r(:,i) Rightglint2cam1r(:,i) Leftpupilcam1r(:,i) Rightpupilcam1r(:,i)]';
+    else
+        pnts = [Rightglint1cam1r(:,i) Rightglint2cam1r(:,i) Leftglint1cam1r(:,i) Leftglint2cam1r(:,i) Rightpupilcam1r(:,i) Leftpupilcam1r(:,i)]';
+    end
+    % undistort
+    pnts = undistortPoints( pnts ,params.CameraParameters2);
     
-%% Extract relevant data and check data
- % make sure left eye is always on left side, left glint in cam 1 correspond
- % with left glint in cam 2 (and not the right glint) etc.
-Leftglint1cam1unf = [cellfun(@(x) x(6), Datainfo); cellfun(@(x) x(7), Datainfo)];
-Leftglint2cam1unf = [cellfun(@(x) x(8), Datainfo); cellfun(@(x) x(9), Datainfo)];
-Rightglint1cam1unf = [cellfun(@(x) x(10), Datainfo); cellfun(@(x) x(11), Datainfo)];
-Rightglint2cam1unf = [cellfun(@(x) x(12), Datainfo); cellfun(@(x) x(13), Datainfo)];
-Leftpupilcam1r = [cellfun(@(x) x(14), Datainfo); cellfun(@(x) x(15), Datainfo)];
-Rightpupilcam1r = [cellfun(@(x) x(16), Datainfo); cellfun(@(x) x(17), Datainfo)];
+    % make sure glint1 is to the left of glint2
+    if pnts(1,1) < pnts(2,1)
+        Leftglint1cam1r(:,i)  = pnts(1,:);
+        Leftglint2cam1r(:,i)  = pnts(2,:);
+    else
+        Leftglint1cam1r(:,i)  = pnts(2,:);
+        Leftglint2cam1r(:,i)  = pnts(1,:);
+    end
+    if pnts(3,1) < pnts(4,1)
+        Rightglint1cam1r(:,i) = pnts(3,:);
+        Rightglint2cam1r(:,i) = pnts(4,:);
+    else
+        Rightglint1cam1r(:,i) = pnts(4,:);
+        Rightglint2cam1r(:,i) = pnts(3,:);
+    end
+    Leftpupilcam1r(:,i)     = pnts(5,:);
+    Rightpupilcam1r(:,i)    = pnts(6,:);
+end
+toc
 
-Leftpupsizecam1=[cellfun(@(x) x(18), Datainfo)];
-Rightpupsizecam1=[cellfun(@(x) x(19), Datainfo)];
+Leftglint1cam2r  = Datainfo2(6:7,:); 
+Leftglint2cam2r  = Datainfo2(8:9,:); 
+Rightglint1cam2r = Datainfo2(10:11,:);
+Rightglint2cam2r = Datainfo2(12:13,:); 
+Leftpupilcam2r   = Datainfo2(14:15,:);
+Rightpupilcam2r  = Datainfo2(16:17,:);
+Leftpupsizecam2  = Datainfo2(18,:);
+Rightpupsizecam2 = Datainfo2(19,:);
 
-Leftpupsizecam2=[cellfun(@(x) x(18), Datainfo2)];
-Rightpupsizecam2=[cellfun(@(x) x(19), Datainfo2)];
+disp('Undistort and unscramble data from camera 2'); tic
+parfor i=1:nSamples2
+    
+    % make sure left eye is always on left side
+    pl = Leftpupilcam2r(:,i);
+    pr = Rightpupilcam2r(:,i);
+    if pl(1) < pr(1)
+        pnts = [Leftglint1cam2r(:,i) Leftglint2cam2r(:,i) Rightglint1cam2r(:,i) Rightglint2cam2r(:,i) Leftpupilcam2r(:,i) Rightpupilcam2r(:,i)]';
+    else
+        pnts = [Rightglint1cam2r(:,i) Rightglint2cam2r(:,i) Leftglint1cam2r(:,i) Leftglint2cam2r(:,i) Rightpupilcam2r(:,i) Leftpupilcam2r(:,i)]';
+    end
+    % undistort
+    pnts = undistortPoints( pnts ,params.CameraParameters1);
+    
+    % make sure glint1 is to the left of glint2
+    if pnts(1,1) < pnts(2,1)
+        Leftglint1cam2r(:,i)  = pnts(1,:);
+        Leftglint2cam2r(:,i)  = pnts(2,:);
+    else
+        Leftglint1cam2r(:,i)  = pnts(2,:);
+        Leftglint2cam2r(:,i)  = pnts(1,:);
+    end
+    if pnts(3,1) < pnts(4,1)
+        Rightglint1cam2r(:,i) = pnts(3,:);
+        Rightglint2cam2r(:,i) = pnts(4,:);
+    else
+        Rightglint1cam2r(:,i) = pnts(4,:);
+        Rightglint2cam2r(:,i) = pnts(3,:);
+    end
+    Leftpupilcam2r(:,i)     = pnts(5,:);
+    Rightpupilcam2r(:,i)    = pnts(6,:);
+end
+toc
 
-Leftglint1cam2unf = [cellfun(@(x) x(6), Datainfo2); cellfun(@(x) x(7), Datainfo2)];
-Leftglint2cam2unf = [cellfun(@(x) x(8), Datainfo2); cellfun(@(x) x(9), Datainfo2)];
-Rightglint1cam2unf = [cellfun(@(x) x(10), Datainfo2); cellfun(@(x) x(11), Datainfo2)];
-Rightglint2cam2unf = [cellfun(@(x) x(12), Datainfo2); cellfun(@(x) x(13), Datainfo2)];
-Leftpupilcam2r = [cellfun(@(x) x(14), Datainfo2); cellfun(@(x) x(15), Datainfo2)];
-Rightpupilcam2r = [cellfun(@(x) x(16), Datainfo2); cellfun(@(x) x(17), Datainfo2)];
-
-Leftpupilcam1unf=Leftpupilcam1r;
-Leftpupilcam2unf=Leftpupilcam2r;
-Rightpupilcam1unf=Rightpupilcam1r;
-Rightpupilcam2unf=Rightpupilcam2r;
-
-Leftpupilcam1r(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:))=Rightpupilcam1unf(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:));
-Leftpupilcam2r(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:))=Rightpupilcam2unf(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:));
-
-Rightpupilcam1r(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:))=Leftpupilcam1unf(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:));
-Rightpupilcam2r(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:))=Leftpupilcam2unf(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:));
-
-
-Leftglint1cam1r=Leftglint1cam1unf;
-Leftglint1cam1r(:,Leftglint1cam1unf(1,:)>Leftglint2cam1unf(1,:))=Leftglint2cam1unf(:,Leftglint1cam1unf(1,:)>Leftglint2cam1unf(1,:));
-Leftglint2cam1r=Leftglint2cam1unf;
-Leftglint2cam1r(:,Leftglint1cam1unf(1,:)>Leftglint2cam1unf(1,:))=Leftglint1cam1unf(:,Leftglint1cam1unf(1,:)>Leftglint2cam1unf(1,:));
-
-Rightglint1cam1r=Rightglint1cam1unf;
-Rightglint1cam1r(:,Rightglint1cam1unf(1,:)>Rightglint2cam1unf(1,:))=Rightglint2cam1unf(:,Rightglint1cam1unf(1,:)>Rightglint2cam1unf(1,:));
-Rightglint2cam1r=Rightglint2cam1unf;
-Rightglint2cam1r(:,Rightglint1cam1unf(1,:)>Rightglint2cam1unf(1,:))=Rightglint1cam1unf(:,Rightglint1cam1unf(1,:)>Rightglint2cam1unf(1,:));
-
-Leftglint1cam2r=Leftglint1cam2unf;
-Leftglint1cam2r(:,Leftglint1cam2unf(1,:)>Leftglint2cam2unf(1,:))=Leftglint2cam2unf(:,Leftglint1cam2unf(1,:)>Leftglint2cam2unf(1,:));
-Leftglint2cam2r=Leftglint2cam2unf;
-Leftglint2cam2r(:,Leftglint1cam2unf(1,:)>Leftglint2cam2unf(1,:))=Leftglint1cam2unf(:,Leftglint1cam2unf(1,:)>Leftglint2cam2unf(1,:));
-
-Rightglint1cam2r=Rightglint1cam2unf;
-Rightglint1cam2r(:,Rightglint1cam2unf(1,:)>Rightglint2cam2unf(1,:))=Rightglint2cam2unf(:,Rightglint1cam2unf(1,:)>Rightglint2cam2unf(1,:));
-Rightglint2cam2r=Rightglint2cam2unf;
-Rightglint2cam2r(:,Rightglint1cam2unf(1,:)>Rightglint2cam2unf(1,:))=Rightglint1cam2unf(:,Rightglint1cam2unf(1,:)>Rightglint2cam2unf(1,:));
-
-
-Leftglint1cam1ru=Leftglint1cam1r;
-Rightglint1cam1ru=Rightglint1cam1r;
-Leftglint2cam1ru=Leftglint2cam1r;
-Rightglint2cam1ru=Rightglint2cam1r;
-
-Leftglint1cam2ru=Leftglint1cam2r;
-Rightglint1cam2ru=Rightglint1cam2r;
-Leftglint2cam2ru=Leftglint2cam2r;
-Rightglint2cam2ru=Rightglint2cam2r;
-
-Leftglint1cam1r(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:))=Rightglint1cam1ru(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:));
-Rightglint1cam1r(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:))=Leftglint1cam1ru(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:));
-
-Leftglint2cam1r(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:))=Rightglint2cam1ru(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:));
-Rightglint2cam1r(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:))=Leftglint2cam1ru(:,Leftpupilcam1unf(1,:)>Rightpupilcam1unf(1,:));
-
-Leftglint1cam2r(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:))=Rightglint1cam2ru(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:));
-Rightglint1cam2r(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:))=Leftglint1cam2ru(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:));
-
-Leftglint2cam2r(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:))=Rightglint2cam2ru(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:));
-Rightglint2cam2r(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:))=Leftglint2cam2ru(:,Leftpupilcam2unf(1,:)>Rightpupilcam2unf(1,:));
-
-t0=tstamps(ismember(tstamps,tstamps2));
-
-tstampstot=unique([tstamps tstamps2]);
-
-%% Interpolate signals
-indd=find(diff(tstamps)==0);
-indd2=find(diff(tstamps2)==0);
-
-tstamps(indd)=tstamps(indd)+0.1;
-tstamps2(indd2)=tstamps2(indd2)+0.1;
-
-Leftpupilcam1(1,:) = (interp1(tstamps,((Leftpupilcam1r(1,:))),tstampstot,'linear'));
-Leftpupilcam2(1,:) = (interp1(tstamps2,((Leftpupilcam2r(1,:))),tstampstot,'linear'));
-
-Rightpupilcam1(1,:) = (interp1(tstamps,((Rightpupilcam1r(1,:))),tstampstot,'linear'));
-Rightpupilcam2(1,:) = (interp1(tstamps2,((Rightpupilcam2r(1,:))),tstampstot,'linear'));
-
-Leftglint1cam1(1,:) = (interp1(tstamps(~isnan(Leftglint1cam1r(1,:))),((Leftglint1cam1r(1,(~isnan(Leftglint1cam1r(1,:)))))),tstampstot,'linear'));
-Leftglint2cam1(1,:) = (interp1(tstamps(~isnan(Leftglint2cam1r(1,:))),((Leftglint2cam1r(1,(~isnan(Leftglint2cam1r(1,:)))))),tstampstot,'linear'));
-Rightglint1cam1(1,:) = (interp1(tstamps(~isnan(Rightglint1cam1r(1,:))),((Rightglint1cam1r(1,(~isnan(Rightglint1cam1r(1,:)))))),tstampstot,'linear'));
-Rightglint2cam1(1,:) = (interp1(tstamps(~isnan(Rightglint2cam1r(1,:))),((Rightglint2cam1r(1,(~isnan(Rightglint2cam1r(1,:)))))),tstampstot,'linear'));
-
-Leftglint1cam2(1,:) = (interp1(tstamps2(~isnan(Leftglint1cam2r(1,:))),((Leftglint1cam2r(1,(~isnan(Leftglint1cam2r(1,:)))))),tstampstot,'linear'));
-Leftglint2cam2(1,:) = (interp1(tstamps2(~isnan(Leftglint2cam2r(1,:))),((Leftglint2cam2r(1,(~isnan(Leftglint2cam2r(1,:)))))),tstampstot,'linear'));
-Rightglint1cam2(1,:) =(interp1(tstamps2(~isnan(Rightglint1cam2r(1,:))),((Rightglint1cam2r(1,(~isnan(Rightglint1cam2r(1,:)))))),tstampstot,'linear'));
-Rightglint2cam2(1,:) = (interp1(tstamps2(~isnan(Rightglint2cam2r(1,:))),((Rightglint2cam2r(1,(~isnan(Rightglint2cam2r(1,:)))))),tstampstot,'linear'));
-
-Leftpupilcam1(2,:) = (interp1(tstamps,((Leftpupilcam1r(2,:))),tstampstot,'linear'));
-Leftpupilcam2(2,:) = (interp1(tstamps2,((Leftpupilcam2r(2,:))),tstampstot,'linear'));
-
-Rightpupilcam1(2,:) = (interp1(tstamps,((Rightpupilcam1r(2,:))),tstampstot,'linear'));
-Rightpupilcam2(2,:) = (interp1(tstamps2,((Rightpupilcam2r(2,:))),tstampstot,'linear'));
-
-Leftglint1cam1(2,:) = (interp1(tstamps(~isnan(Leftglint1cam1r(1,:))),((Leftglint1cam1r(2,(~isnan(Leftglint1cam1r(1,:)))))),tstampstot,'linear'));
-Leftglint2cam1(2,:) = (interp1(tstamps(~isnan(Leftglint2cam1r(1,:))),((Leftglint2cam1r(2,(~isnan(Leftglint2cam1r(1,:)))))),tstampstot,'linear'));
-Rightglint1cam1(2,:) = (interp1(tstamps(~isnan(Rightglint1cam1r(1,:))),((Rightglint1cam1r(2,(~isnan(Rightglint1cam1r(1,:)))))),tstampstot,'linear'));
-Rightglint2cam1(2,:) = (interp1(tstamps(~isnan(Rightglint2cam1r(1,:))),((Rightglint2cam1r(2,(~isnan(Rightglint2cam1r(1,:)))))),tstampstot,'linear'));
-
-Leftglint1cam2(2,:) = (interp1(tstamps2(~isnan(Leftglint1cam2r(1,:))),((Leftglint1cam2r(2,(~isnan(Leftglint1cam2r(1,:)))))),tstampstot,'linear'));
-Leftglint2cam2(2,:) = (interp1(tstamps2(~isnan(Leftglint2cam2r(1,:))),((Leftglint2cam2r(2,(~isnan(Leftglint2cam2r(1,:)))))),tstampstot,'linear'));
-Rightglint1cam2(2,:) = (interp1(tstamps2(~isnan(Rightglint1cam2r(1,:))),((Rightglint1cam2r(2,(~isnan(Rightglint1cam2r(1,:)))))),tstampstot,'linear'));
-Rightglint2cam2(2,:) = (interp1(tstamps2(~isnan(Rightglint2cam2r(1,:))),((Rightglint2cam2r(2,(~isnan(Rightglint2cam2r(1,:)))))),tstampstot,'linear'));
-
-%% Estimate center virtual pupil and center of corneal curvature
-
-ind=1:length(tstampstot);
-ind2=1:length(tstampstot);
-
-ki=1:length(ind);
-clear Par* nl* snorm
-in=1;
-
-% LocL1 and LocL2 are the positions of the IR sources. Make sure there were
-% no left/right switches during calibration
+% LocL1 and LocL2 are the positions of the IR sources. 
+% Make sure there were no left/right switches during calibration
 if LocL1(1) < LocL2(1)
     l1=LocL1';
     l2=LocL2';
@@ -226,17 +188,74 @@ else
     l1=LocL2';
 end
 
-% Takes a long time, therefore not all samples. First part eyes were not
-% visible and therefore no valid data
-parfor i=50000:100000
-     
-    [normleft(i,:),cleft(:,i),pleft(:,i)]=estimatepandc(params,T1,l1,l2,Leftpupilcam1(:,ind(ki(i))),Leftpupilcam2(:,ind2(ki(i))),...
-        Leftglint1cam1(:,ind(ki(i))),Leftglint1cam2(:,ind2(ki(i))),Leftglint2cam1(:,ind(ki(i))),Leftglint2cam2(:,ind2(ki(i))));
-    
-      [snormright(i,:),cright(:,i),pright(:,i)]=estimatepandc(params,T1,l1,l2,Rightpupilcam1(:,ind(ki(i))),Rightpupilcam2(:,ind2(ki(i))),...
-        Rightglint1cam1(:,ind(ki(i))),Rightglint1cam2(:,ind2(ki(i))),Rightglint2cam1(:,ind(ki(i))),Rightglint2cam2(:,ind2(ki(i))));
-    
+
+%% Interpolate signals
+
+tstampstot = unique([tstamps1 tstamps2]);
+nSamples   = length(tstampstot);
+
+Leftpupilcam1   = zeros(2,nSamples);
+Rightpupilcam1  = zeros(2,nSamples);
+Leftglint1cam1  = zeros(2,nSamples);
+Leftglint2cam1  = zeros(2,nSamples);
+Rightglint1cam1 = zeros(2,nSamples);
+Rightglint2cam1 = zeros(2,nSamples);
+Leftpupilcam2   = zeros(2,nSamples);
+Rightpupilcam2  = zeros(2,nSamples);
+Leftglint1cam2  = zeros(2,nSamples);
+Leftglint2cam2  = zeros(2,nSamples);
+Rightglint1cam2 = zeros(2,nSamples);
+Rightglint2cam2 = zeros(2,nSamples);
+
+Leftpupilcam1(1,:) = interp1(tstamps1,Leftpupilcam1r(1,:),tstampstot,'linear','extrap');
+Leftpupilcam2(1,:) = interp1(tstamps2,Leftpupilcam2r(1,:),tstampstot,'linear','extrap');
+
+Rightpupilcam1(1,:) = interp1(tstamps1,Rightpupilcam1r(1,:),tstampstot,'linear','extrap');
+Rightpupilcam2(1,:) = interp1(tstamps2,Rightpupilcam2r(1,:),tstampstot,'linear','extrap');
+
+Leftglint1cam1(1,:)  = interp1( tstamps1(~isnan(Leftglint1cam1r(1,:))), Leftglint1cam1r(1,(~isnan(Leftglint1cam1r(1,:)))), tstampstot,'linear','extrap');
+Leftglint2cam1(1,:)  = interp1( tstamps1(~isnan(Leftglint2cam1r(1,:))), Leftglint2cam1r(1,(~isnan(Leftglint2cam1r(1,:)))), tstampstot,'linear','extrap');
+Rightglint1cam1(1,:) = interp1( tstamps1(~isnan(Rightglint1cam1r(1,:))), Rightglint1cam1r(1,(~isnan(Rightglint1cam1r(1,:)))), tstampstot,'linear','extrap');
+Rightglint2cam1(1,:) = interp1( tstamps1(~isnan(Rightglint2cam1r(1,:))), Rightglint2cam1r(1,(~isnan(Rightglint2cam1r(1,:)))), tstampstot,'linear','extrap');
+
+Leftglint1cam2(1,:)  = interp1( tstamps2(~isnan(Leftglint1cam2r(1,:))), Leftglint1cam2r(1,(~isnan(Leftglint1cam2r(1,:)))), tstampstot,'linear','extrap');
+Leftglint2cam2(1,:)  = interp1( tstamps2(~isnan(Leftglint2cam2r(1,:))), Leftglint2cam2r(1,(~isnan(Leftglint2cam2r(1,:)))), tstampstot,'linear','extrap');
+Rightglint1cam2(1,:) = interp1( tstamps2(~isnan(Rightglint1cam2r(1,:))), Rightglint1cam2r(1,(~isnan(Rightglint1cam2r(1,:)))), tstampstot,'linear','extrap');
+Rightglint2cam2(1,:) = interp1( tstamps2(~isnan(Rightglint2cam2r(1,:))), Rightglint2cam2r(1,(~isnan(Rightglint2cam2r(1,:)))), tstampstot,'linear','extrap');
+
+Leftpupilcam1(2,:) = interp1(tstamps1,Leftpupilcam1r(2,:),tstampstot,'linear','extrap');
+Leftpupilcam2(2,:) = interp1(tstamps2,Leftpupilcam2r(2,:),tstampstot,'linear','extrap');
+
+Rightpupilcam1(2,:) = interp1(tstamps1,Rightpupilcam1r(2,:),tstampstot,'linear','extrap');
+Rightpupilcam2(2,:) = interp1(tstamps2,Rightpupilcam2r(2,:),tstampstot,'linear','extrap');
+
+Leftglint1cam1(2,:)  = interp1( tstamps1(~isnan(Leftglint1cam1r(1,:))), Leftglint1cam1r(2,(~isnan(Leftglint1cam1r(1,:)))), tstampstot,'linear','extrap');
+Leftglint2cam1(2,:)  = interp1( tstamps1(~isnan(Leftglint2cam1r(1,:))), Leftglint2cam1r(2,(~isnan(Leftglint2cam1r(1,:)))), tstampstot,'linear','extrap');
+Rightglint1cam1(2,:) = interp1( tstamps1(~isnan(Rightglint1cam1r(1,:))), Rightglint1cam1r(2,(~isnan(Rightglint1cam1r(1,:)))), tstampstot,'linear','extrap');
+Rightglint2cam1(2,:) = interp1( tstamps1(~isnan(Rightglint2cam1r(1,:))), Rightglint2cam1r(2,(~isnan(Rightglint2cam1r(1,:)))), tstampstot,'linear','extrap');
+
+Leftglint1cam2(2,:)  = interp1( tstamps2(~isnan(Leftglint1cam2r(1,:))), Leftglint1cam2r(2,(~isnan(Leftglint1cam2r(1,:)))), tstampstot,'linear','extrap');
+Leftglint2cam2(2,:)  = interp1( tstamps2(~isnan(Leftglint2cam2r(1,:))), Leftglint2cam2r(2,(~isnan(Leftglint2cam2r(1,:)))), tstampstot,'linear','extrap');
+Rightglint1cam2(2,:) = interp1( tstamps2(~isnan(Rightglint1cam2r(1,:))), Rightglint1cam2r(2,(~isnan(Rightglint1cam2r(1,:)))), tstampstot,'linear','extrap');
+Rightglint2cam2(2,:) = interp1( tstamps2(~isnan(Rightglint2cam2r(1,:))), Rightglint2cam2r(2,(~isnan(Rightglint2cam2r(1,:)))), tstampstot,'linear','extrap');
+
+
+%% Estimate center virtual pupil and center of corneal curvature
+
+disp('Estimate 3D coordinates of pupil and center of corneal curvature'); tic
+
+normleft = zeros(nSamples,3); 
+cleft    = zeros(3,nSamples); 
+pleft    = zeros(3,nSamples); 
+normright = zeros(nSamples,3); 
+cright    = zeros(3,nSamples); 
+pright    = zeros(3,nSamples); 
+
+parfor i=1:nSamples
+    [normleft(i,:) ,cleft(:,i) ,pleft(:,i) ]=estimatepandc(params,T1,l1,l2,Leftpupilcam1(:,i) ,Leftpupilcam2(:,i) ,Leftglint1cam1(:,i) ,Leftglint1cam2(:,i) ,Leftglint2cam1(:,i) ,Leftglint2cam2(:,i) );
+    [normright(i,:),cright(:,i),pright(:,i)]=estimatepandc(params,T1,l1,l2,Rightpupilcam1(:,i),Rightpupilcam2(:,i),Rightglint1cam1(:,i),Rightglint1cam2(:,i),Rightglint2cam1(:,i),Rightglint2cam2(:,i));
 end
+toc
 
 %% Calculate gaze
 % alpha, beta and K were estimated in a one-point calibration procedure
@@ -249,22 +268,28 @@ alpharight=-2.54;
 betaleft=1.61;
 betaright=3.58;
 
+disp('Calculate gaze'); tic
 
-
-[Pcorrectleft,Ccorrectleft,normcorrectleft,ax1lef,ax2,cgazeleft,gazeleft,lengthnleft ]=calculategaze(cleft,pleft,Rpos,Centerscreen,Kleft,alphaleft,betaleft);
-[Pcorrectright,Ccorrectright,normcorrectright,ax1right,ax2right,cgazeright,gazeright,lengthnright ]=calculategaze(cright,pright,Rpos,Centerscreen,Kright,alpharight,betaright);
-
+[Pcorrectleft, Ccorrectleft, normcorrectleft, ax1lef,  ax2left, cgazeleft, gazeleft, lengthnleft ]=calculategaze(cleft, pleft, Rpos,Centerscreen,Kleft,alphaleft,betaleft);
+[Pcorrectright,Ccorrectright,normcorrectright,ax1right,ax2right,cgazeright,gazeright,lengthnright]=calculategaze(cright,pright,Rpos,Centerscreen,Kright,alpharight,betaright);
 
 % Correction with K/Kactual, as described in the paper
-gazeleftcorrected=(Kleft./medfilt1(lengthnleft,20))'.*gazeleft;
+gazeleftcorrected =(Kleft./medfilt1(lengthnleft,20))'.*gazeleft;
 gazerightcorrected=(Kright./medfilt1(lengthnright,20))'.*gazeright;
+toc
+
+disp('All done');
+toc(ticstart)
 
 % Plots
-plot(tstampstot(50000:100000),gazeleft(50000:100000,:))
+plot(tstampstot,gazeleft)
 hold on
-plot(tstampstot(50000:100000),gazeleftcorrected(50000:100000,:),'c')
-plot(tstampstot(50000:100000),gazeright(50000:100000,:),'m')
-plot(tstampstot(50000:100000),gazerightcorrected(50000:100000,:),'k')
+plot(tstampstot,gazeleftcorrected,'c')
+
+plot(tstampstot,gazeright,'m')
+plot(tstampstot,gazerightcorrected,'k')
+ylim([-512 +512])
+hold off
 
 
 
